@@ -1,1 +1,5 @@
-complaints.db *.pkl .env __pycache__/ venv/ 
+complaints.db
+*.pkl
+.env
+__pycache__/ 
+venv/
