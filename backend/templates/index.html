@@ -1,0 +1,1924 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Smart Complaint Tracker - College Grievance Portal</title>
+<style>
+  /* ===== GLOBAL STYLES ===== */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    background-color: #1d035f;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #EBD5AB;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  /* ===== HEADER & NAVIGATION ===== */
+  header {
+    background: rgba(29, 3, 95, 0.95);
+    backdrop-filter: blur(10px);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 2px solid #8BAE66;
+  }
+
+  .nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+  }
+
+  .logo {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #F0E491;
+  }
+
+  .logo span {
+    color: #8BAE66;
+  }
+
+  .nav-links {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+  }
+
+  .nav-links a {
+    color: #EBD5AB;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+  }
+
+  .nav-links a:hover {
+    color: #8BAE66;
+  }
+
+  /* ===== HERO SECTION ===== */
+  .hero {
+    background: linear-gradient(135deg, #2d0a7a 0%, #1d035f 100%);
+    padding: 120px 0 80px;
+    text-align: center;
+  }
+
+  .hero h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    background: linear-gradient(45deg, #F0E491, #8BAE66);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hero p {
+    font-size: 1.2rem;
+    max-width: 600px;
+    margin: 0 auto 2rem;
+    color: #caffae;
+  }
+
+  .cta-button {
+    display: inline-block;
+    background: #9af736;
+    color: #000;
+    padding: 12px 30px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+
+  .cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(139, 174, 102, 0.4);
+  }
+
+  /* ===== HOW IT WORKS ===== */
+  .how-it-works {
+    padding: 80px 0;
+    background: #2d0a7a;
+  }
+
+  .section-title {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+    color: #F0E491;
+  }
+
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+  }
+
+  .step-card {
+    background: #3a1a7a;
+    padding: 2rem;
+    border-radius: 15px;
+    text-align: center;
+    transition: transform 0.3s;
+    border: 1px solid #8BAE66;
+  }
+
+  .step-card:hover {
+    transform: translateY(-5px);
+  }
+
+  .step-number {
+    background: #8BAE66;
+    color: #000;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0 auto 1rem;
+  }
+
+  /* ===== COMPLAINT CATEGORIES ===== */
+  .categories {
+    padding: 80px 0;
+    background: #1d035f;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .category-card {
+    background: linear-gradient(145deg, #3a1a7a, #2d0a7a);
+    padding: 1.8rem;
+    border-radius: 15px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 2px solid transparent;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .category-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.6s;
+  }
+
+  .category-card:hover::before {
+    left: 100%;
+  }
+
+  .category-card:hover {
+    transform: translateY(-10px) scale(1.03);
+    border-color: #8BAE66;
+    box-shadow: 0 15px 40px rgba(139, 174, 102, 0.3);
+  }
+
+  .category-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  .category-card h3 {
+    color: #F0E491;
+    margin-bottom: 1rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 2px solid;
+    font-size: 1.5rem;
+  }
+
+  .category-priority {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+
+  .category-urgent {
+    background: #ff4757;
+    color: white;
+  }
+
+  .category-high {
+    background: #ff7f50;
+    color: white;
+  }
+
+  .category-medium {
+    background: #ffa502;
+    color: black;
+  }
+
+  .category-low {
+    background: #2ed573;
+    color: white;
+  }
+
+  .category-resolve-time {
+    background: rgba(240, 228, 145, 0.1);
+    padding: 8px;
+    border-radius: 8px;
+    margin: 1rem 0;
+    font-weight: bold;
+  }
+
+  .category-card ul {
+    list-style: none;
+    margin-top: 1rem;
+  }
+
+  .category-card li {
+    padding: 0.4rem 0;
+    color: #caffae;
+    position: relative;
+    padding-left: 1.5rem;
+  }
+
+  .category-card li:before {
+    content: "✓";
+    color: #8BAE66;
+    position: absolute;
+    left: 0;
+    font-weight: bold;
+  }
+
+  /* ===== CATEGORY DETAIL MODAL ===== */
+  .category-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 2000;
+    overflow-y: auto;
+    animation: fadeIn 0.3s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .modal-content {
+    background: linear-gradient(145deg, #2d0a7a, #1d035f);
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 2.5rem;
+    border-radius: 20px;
+    border: 3px solid #8BAE66;
+    position: relative;
+    animation: slideUp 0.4s ease;
+  }
+
+  @keyframes slideUp {
+    from {
+      transform: translateY(50px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 20px;
+    right: 25px;
+    font-size: 2rem;
+    color: #F0E491;
+    cursor: pointer;
+    transition: transform 0.3s;
+  }
+
+  .modal-close:hover {
+    transform: rotate(90deg);
+    color: #ff4757;
+  }
+
+  .modal-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .modal-icon {
+    font-size: 3rem;
+  }
+
+  .modal-title {
+    font-size: 2.2rem;
+    color: #F0E491;
+  }
+
+  .modal-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+  }
+
+  .detail-card {
+    background: rgba(139, 174, 102, 0.1);
+    padding: 1.5rem;
+    border-radius: 12px;
+    text-align: center;
+    border: 1px solid #8BAE66;
+  }
+
+  .detail-card h4 {
+    color: #F0E491;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+  }
+
+  .detail-card p {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #caffae;
+  }
+
+  .modal-section {
+    margin: 2rem 0;
+  }
+
+  .modal-section h3 {
+    color: #F0E491;
+    border-bottom: 2px solid #8BAE66;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .modal-section ul {
+    list-style: none;
+    padding-left: 1rem;
+  }
+
+  .modal-section li {
+    padding: 0.5rem 0;
+    color: #caffae;
+    position: relative;
+    padding-left: 1.5rem;
+  }
+
+  .modal-section li:before {
+    content: "•";
+    color: #8BAE66;
+    position: absolute;
+    left: 0;
+    font-size: 1.5rem;
+  }
+
+  .progress-bar {
+    height: 12px;
+    background: #3a1a7a;
+    border-radius: 6px;
+    margin: 1rem 0;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    border-radius: 6px;
+    transition: width 1s ease;
+  }
+
+  .priority-high {
+    background: linear-gradient(90deg, #ff4757, #ff6b81);
+  }
+
+  .priority-medium {
+    background: linear-gradient(90deg, #ffa502, #ffb142);
+  }
+
+  .priority-low {
+    background: linear-gradient(90deg, #2ed573, #7bed9f);
+  }
+
+  /* ===== COMPLAINT FORM SECTION ===== */
+  .complaint-section {
+    padding: 80px 0;
+    background: #2d0a7a;
+  }
+
+  .form-container {
+    max-width: 600px;
+    margin: 0 auto;
+    background: #F0E491;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  }
+
+  .form-container label {
+    display: block;
+    margin-bottom: 1rem;
+    font-weight: bold;
+    color: #131101;
+    font-size: 1.1rem;
+  }
+
+  .form-container textarea {
+    width: 100%;
+    height: 150px;
+    border-radius: 8px;
+    border: 2px solid #8BAE66;
+    padding: 15px;
+    font-size: 1rem;
+    resize: vertical;
+    transition: border-color 0.3s;
+  }
+
+  .form-container textarea:focus {
+    outline: none;
+    border-color: #628141;
+  }
+
+  .submit-btn {
+    background: #8BAE66;
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    color: #000;
+    cursor: pointer;
+    border-radius: 8px;
+    margin-top: 1rem;
+    width: 100%;
+    font-weight: bold;
+    transition: all 0.3s;
+  }
+
+  .submit-btn:hover {
+    background: #729951;
+    transform: translateY(-2px);
+  }
+
+  .result {
+    margin-top: 1.5rem;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    padding: 1rem;
+    border-radius: 8px;
+    background: #e8f5e8;
+    color: #2d0a7a;
+  }
+
+  /* ===== FOOTER ===== */
+  footer {
+    background: #0f0230;
+    padding: 40px 0 20px;
+    text-align: center;
+  }
+
+  .footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .footer-section h3 {
+    color: #F0E491;
+    margin-bottom: 1rem;
+  }
+
+  .footer-section p, .footer-section a {
+    color: #caffae;
+    text-decoration: none;
+  }
+
+  .footer-section a:hover {
+    color: #8BAE66;
+  }
+
+  .copyright {
+    border-top: 1px solid #8BAE66;
+    padding-top: 1rem;
+    color: #EBD5AB;
+  }
+
+  /* ===== NOTIFICATION STYLES ===== */
+  .notification {
+    position: fixed;
+    top: 90px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 8px;
+    color: white;
+    z-index: 1000;
+    max-width: 300px;
+    display: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    animation: slideInRight 0.3s ease;
+  }
+
+  .notification.success {
+    background-color: #4CAF50;
+    border-left: 4px solid #2E7D32;
+  }
+
+  .notification.error {
+    background-color: #f44336;
+    border-left: 4px solid #c62828;
+  }
+
+  .notification.warning {
+    background-color: #ff9800;
+    border-left: 4px solid #ef6c00;
+  }
+
+  .notification.info {
+    background-color: #2196F3;
+    border-left: 4px solid #1565c0;
+  }
+
+  .notification-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    float: right;
+    margin-left: 15px;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+  }
+
+  .notification-close:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  /* Urgency Level Styles */
+  .urgency-high {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    color: white;
+    border-left: 5px solid #ff6b6b;
+  }
+
+  .urgency-medium {
+    background: linear-gradient(135deg, #fd7e14, #e8590c);
+    color: white;
+    border-left: 5px solid #ffa94d;
+  }
+
+  .urgency-low {
+    background: linear-gradient(135deg, #28a745, #1e7e34);
+    color: white;
+    border-left: 5px solid #51cf66;
+  }
+
+  .urgency-badge {
+    display: inline-block;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    margin: 5px;
+  }
+
+  /* Progress bar for deadline */
+  .deadline-progress {
+    height: 8px;
+    background: #e9ecef;
+    border-radius: 4px;
+    margin: 10px 0;
+    overflow: hidden;
+  }
+
+  .deadline-progress-bar {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+  }
+
+  /* Complaint status card */
+  .complaint-card {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 15px 0;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    border-top: 4px solid;
+  }
+
+  /* Real-time urgency indicator */
+  .urgency-preview {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 15px;
+    border-radius: 10px;
+    color: white;
+    display: none;
+    z-index: 1000;
+    max-width: 300px;
+  }
+
+  /* ===== STATUS TRACKING SECTION ===== */
+.track-status {
+  padding: 80px 0;
+  background: #1d035f;
+  position: relative;
+}
+
+.status-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  background: linear-gradient(145deg, #2d0a7a, #1d035f);
+  border-radius: 20px;
+  padding: 2.5rem;
+  border: 3px solid #8BAE66;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+}
+
+.status-input-section {
+  background: rgba(29, 3, 95, 0.7);
+  padding: 2rem;
+  border-radius: 15px;
+  margin-bottom: 2rem;
+  border: 2px solid #8BAE66;
+}
+
+.status-display-section {
+  min-height: 400px;
+  background: rgba(45, 10, 122, 0.8);
+  border-radius: 15px;
+  padding: 2rem;
+  border: 2px solid #8BAE66;
+  transition: all 0.3s ease;
+}
+
+/* Status Timeline */
+.status-timeline {
+  position: relative;
+  padding: 20px 0;
+}
+
+.status-timeline::before {
+  content: '';
+  position: absolute;
+  left: 30px;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: #8BAE66;
+}
+
+.timeline-item {
+  position: relative;
+  padding-left: 60px;
+  margin-bottom: 30px;
+}
+
+.timeline-icon {
+  position: absolute;
+  left: 15px;
+  top: 0;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  z-index: 2;
+}
+
+.timeline-content {
+  background: rgba(139, 174, 102, 0.1);
+  padding: 15px;
+  border-radius: 10px;
+  border-left: 4px solid;
+}
+
+/* Status Colors */
+.status-submitted { border-color: #3498db; }
+.status-under_review { border-color: #f39c12; }
+.status-in_progress { border-color: #9b59b6; }
+.status-resolved { border-color: #2ecc71; }
+
+.status-badge {
+  display: inline-block;
+  padding: 5px 15px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 0.9rem;
+  margin: 5px;
+}
+
+/* Progress Bar */
+.status-progress {
+  height: 10px;
+  background: #3a1a7a;
+  border-radius: 5px;
+  margin: 20px 0;
+  overflow: hidden;
+}
+
+.status-progress-bar {
+  height: 100%;
+  border-radius: 5px;
+  transition: width 1s ease;
+}
+
+/* Admin Update Cards */
+.admin-update-card {
+  background: rgba(240, 228, 145, 0.1);
+  border-radius: 10px;
+  padding: 15px;
+  margin: 10px 0;
+  border-left: 4px solid #8BAE66;
+}
+
+/* Status Overview */
+.status-overview {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin: 20px 0;
+}
+
+.status-card {
+  background: rgba(139, 174, 102, 0.1);
+  padding: 15px;
+  border-radius: 10px;
+  text-align: center;
+  border: 1px solid #8BAE66;
+}
+
+.status-card h4 {
+  color: #F0E491;
+  margin-bottom: 5px;
+  font-size: 0.9rem;
+}
+
+.status-card p {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #caffae;
+  }
+
+  /* Countdown Timer */
+  .deadline-countdown {
+    background: linear-gradient(135deg, #ff4757, #ff6b81);
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    margin: 20px 0;
+    font-weight: bold;
+    font-size: 1.2rem;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.8; }
+    100% { opacity: 1; }
+  }
+
+  @keyframes slideInRight {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  /* ===== RESPONSIVE DESIGN ===== */
+  @media (max-width: 768px) {
+    .nav-links {
+      display: none;
+    }
+
+    .hero h1 {
+      font-size: 2rem;
+    }
+
+    .section-title {
+      font-size: 2rem;
+    }
+
+    .steps {
+      grid-template-columns: 1fr;
+    }
+
+    .notification {
+      left: 10px;
+      right: 10px;
+      max-width: none;
+    }
+
+    .category-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .modal-content {
+      margin: 20px;
+      padding: 1.5rem;
+    }
+
+    .modal-title {
+      font-size: 1.8rem;
+    }
+
+    .modal-details {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+</head>
+<body>
+<!-- Notification Box -->
+<div id="notification" class="notification">
+  <span id="notification-message"></span>
+  <button class="notification-close" onclick="hideNotification()">×</button>
+</div>
+
+<!-- Category Detail Modal -->
+<div id="categoryModal" class="category-modal">
+  <div class="modal-content">
+    <span class="modal-close" onclick="closeModal()">×</span>
+    <div class="modal-header">
+      <span id="modalIcon" class="modal-icon"></span>
+      <h2 id="modalTitle" class="modal-title"></h2>
+    </div>
+    
+    <div class="modal-details">
+      <div class="detail-card">
+        <h4>Priority Level</h4>
+        <p id="modalPriority" class="category-priority"></p>
+      </div>
+      <div class="detail-card">
+        <h4>Urgency Score</h4>
+        <p id="modalUrgency"></p>
+      </div>
+      <div class="detail-card">
+        <h4>Resolution Time</h4>
+        <p id="modalResolveTime"></p>
+      </div>
+      <div class="detail-card">
+        <h4>Response Time</h4>
+        <p id="modalResponseTime"></p>
+      </div>
+    </div>
+
+    <div class="progress-bar">
+      <div id="modalProgressFill" class="progress-fill"></div>
+    </div>
+
+    <div class="modal-section">
+      <h3>What This Category Handles</h3>
+      <ul id="modalHandles"></ul>
+    </div>
+
+    <div class="modal-section">
+      <h3>Typical Complaints</h3>
+      <ul id="modalComplaints"></ul>
+    </div>
+
+    <div class="modal-section">
+      <h3>Resolution Process</h3>
+      <ul id="modalProcess"></ul>
+    </div>
+
+    <div class="modal-section">
+      <h3>Contact Department</h3>
+      <p id="modalDepartment" style="color: #caffae; font-size: 1.1rem;"></p>
+    </div>
+  </div>
+</div>
+
+<!-- Add this right after the notification box -->
+<div id="urgency-preview" class="urgency-preview" style="display: none;"></div>
+
+<!-- Header -->
+<header>
+  <div class="container nav-container">
+    <div class="logo">Smart<span>Complaint</span></div>
+    <ul class="nav-links">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#how-it-works">How It Works</a></li>
+      <li><a href="#categories">Categories</a></li>
+      <li><a href="#submit-complaint">Submit Complaint</a></li>
+      <li><a href="/track">Track Status</a></li>
+    </ul>
+  </div>
+</header>
+
+<!-- Hero Section -->
+<section id="home" class="hero">
+  <div class="container">
+    <h1>Smart Complaint Tracker</h1>
+    <p>Efficient grievance resolution system for college students and staff</p>
+    <a href="#submit-complaint" class="cta-button">Register a Complaint</a>
+  </div>
+</section>
+
+<!-- How It Works Section -->
+<section id="how-it-works" class="how-it-works">
+  <div class="container">
+    <h2 class="section-title">How It Works</h2>
+    <div class="steps">
+      <div class="step-card">
+        <div class="step-number">1</div>
+        <h3>Describe Your Issue</h3>
+        <p>Write your complaint in simple words. Our AI understands natural language.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-number">2</div>
+        <h3>Smart Categorization</h3>
+        <p>AI automatically categorizes your complaint to the right department.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-number">3</div>
+        <h3>Quick Resolution</h3>
+        <p>Get faster resolutions with proper routing and priority handling.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Complaint Categories Section -->
+<section id="categories" class="categories">
+  <div class="container">
+    <h2 class="section-title">Complaint Categories</h2>
+    <p style="text-align: center; margin-bottom: 2rem; color: #caffae; max-width: 800px; margin-left: auto; margin-right: auto;">
+      Click on any category to view detailed information about priority, urgency, and resolution timeline.
+    </p>
+    <div class="category-grid" id="categoryContainer">
+      <!-- Categories will be dynamically inserted here -->
+    </div>
+  </div>
+</section>
+
+<!-- Complaint Form Section -->
+<section id="submit-complaint" class="complaint-section">
+  <div class="container">
+    <h2 class="section-title">Submit Your Complaint</h2>
+    <div class="form-container">
+      <form id="complaintForm">
+        <label for="complaint">Describe your complaint in detail:</label>
+        <textarea id="complaint" name="complaint" placeholder="Example: The fan in classroom 101 is not working since yesterday. It's very difficult to study in this heat..."></textarea>
+        
+        <button type="submit" class="submit-btn">Submit Complaint</button>
+      </form>
+      <div class="result" id="result"></div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>Smart Complaint Tracker</h3>
+        <p>Making campus life better through efficient complaint resolution.</p>
+      </div>
+      <div class="footer-section">
+        <h3>Quick Links</h3>
+        <p><a href="#home">Home</a></p>
+        <p><a href="#how-it-works">How It Works</a></p>
+        <p><a href="#categories">Categories</a></p>
+      </div>
+      <div class="footer-section">
+        <h3>Contact</h3>
+        <p>Email: complaints@college.edu</p>
+        <p>Phone: +91-XXXXX-XXXXX</p>
+        <p>Office: Admin Block, Room 101</p>
+      </div>
+    </div>
+    <div class="copyright">
+      <p>&copy; 2024 Smart Complaint Tracker. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Basic notification function
+  function showNotification(message, type) {
+    const notification = document.getElementById('notification');
+    const messageElement = document.getElementById('notification-message');
+    
+    messageElement.textContent = message;
+    notification.className = 'notification ' + (type || 'info');
+    notification.style.display = 'block';
+    
+    setTimeout(() => {
+      notification.style.display = 'none';
+    }, 5000);
+  }
+
+  // Hide notification
+  function hideNotification() {
+    document.getElementById('notification').style.display = 'none';
+  }
+
+  // Category data
+  const categories = [
+    {
+      id: 1,
+      name: "Maintenance Issues",
+      icon: "🔧",
+      priority: "High",
+      urgency: 85,
+      resolveTime: "24-48 Hours",
+      responseTime: "Within 4 Hours",
+      department: "Facilities & Maintenance Department",
+      handles: [
+        "Electrical failures (lights, fans)",
+        "Broken furniture in classrooms",
+        "Plumbing and water supply issues",
+        "Building maintenance problems",
+        "Air conditioner not working"
+      ],
+      complaints: [
+        "Fan not working in classroom",
+        "Water pipe leaking in bathroom",
+        "Broken window in hall",
+        "Power outlet not functioning"
+      ],
+      process: [
+        "Immediate inspection by maintenance team",
+        "Assessment of repair requirements",
+        "Approval from facility department",
+        "Repair execution by technicians"
+      ]
+    },
+    {
+      id: 2,
+      name: "Hostel Concerns",
+      icon: "🏠",
+      priority: "High",
+      urgency: 80,
+      resolveTime: "12-36 Hours",
+      responseTime: "Within 6 Hours",
+      department: "Hostel Administration",
+      handles: [
+        "Room maintenance issues",
+        "Water and electricity supply",
+        "Hostel security problems",
+        "Common area maintenance",
+        "Wifi connectivity in hostel"
+      ],
+      complaints: [
+        "No hot water in hostel",
+        "Hostel room not cleaned",
+        "Bed bugs in hostel room",
+        "Hostel laundry machine broken"
+      ],
+      process: [
+        "Immediate action by warden",
+        "Coordination with maintenance",
+        "Temporary arrangements if needed",
+        "Student satisfaction check"
+      ]
+    },
+    {
+      id: 3,
+      name: "Sanitation & Hygiene",
+      icon: "🧼",
+      priority: "Medium",
+      urgency: 75,
+      resolveTime: "24 Hours",
+      responseTime: "Within 8 Hours",
+      department: "Sanitation Department",
+      handles: [
+        "Unhygienic toilets and restrooms",
+        "Garbage collection issues",
+        "Foul smell from bathrooms",
+        "Cleanliness in cafeteria",
+        "Mosquito and pest control"
+      ],
+      complaints: [
+        "Toilets not cleaned properly",
+        "Trash accumulation in campus",
+        "Bad odor from restrooms",
+        "Dirty cafeteria tables"
+      ],
+      process: [
+        "Sanitation staff dispatch",
+        "Cleaning and disinfection",
+        "Regular monitoring",
+        "Preventive measures"
+      ]
+    },
+    {
+      id: 4,
+      name: "Anti-Ragging",
+      icon: "🚫",
+      priority: "Urgent",
+      urgency: 95,
+      resolveTime: "Immediate Action",
+      responseTime: "Within 1 Hour",
+      department: "Anti-Ragging Committee",
+      handles: [
+        "Ragging by seniors",
+        "Eve teasing and harassment",
+        "Cyber bullying cases",
+        "Verbal and physical intimidation",
+        "Discrimination based on region"
+      ],
+      complaints: [
+        "Seniors forcing juniors",
+        "Online harassment",
+        "Physical assault threat",
+        "Social media defamation"
+      ],
+      process: [
+        "Immediate investigation",
+        "Protection of victim",
+        "Disciplinary action",
+        "Campus awareness program"
+      ]
+    },
+    {
+      id: 5,
+      name: "Administration",
+      icon: "📋",
+      priority: "Medium",
+      urgency: 60,
+      resolveTime: "3-5 Working Days",
+      responseTime: "Within 24 Hours",
+      department: "Administration Office",
+      handles: [
+        "Lost ID cards and documents",
+        "Fee receipts and payments",
+        "Certificate attestation",
+        "Scholarship processing",
+        "Transfer certificates"
+      ],
+      complaints: [
+        "Student ID card lost",
+        "Fee receipt not issued",
+        "Document verification delay",
+        "Scholarship application pending"
+      ],
+      process: [
+        "Document verification",
+        "Department approval",
+        "Processing and issuance",
+        "Student notification"
+      ]
+    },
+    {
+      id: 6,
+      name: "Academic",
+      icon: "📚",
+      priority: "Medium",
+      urgency: 65,
+      resolveTime: "2-4 Working Days",
+      responseTime: "Within 12 Hours",
+      department: "Academic Department",
+      handles: [
+        "Assignment deadline extensions",
+        "Exam timetable issues",
+        "Course material availability",
+        "Professor availability",
+        "Extra classes requirement"
+      ],
+      complaints: [
+        "Need more time for project",
+        "Exam dates conflicting",
+        "Study notes missing",
+        "Faculty not available for consultation"
+      ],
+      process: [
+        "Academic committee review",
+        "Faculty consultation",
+        "Schedule adjustment",
+        "Student communication"
+      ]
+    },
+    {
+      id: 7,
+      name: "Mess & Food",
+      icon: "🍽️",
+      priority: "Medium",
+      urgency: 70,
+      resolveTime: "24-48 Hours",
+      responseTime: "Within 6 Hours",
+      department: "Mess Committee",
+      handles: [
+        "Food quality and taste",
+        "Food serving temperature",
+        "Hygiene in kitchen",
+        "Menu variety",
+        "Pricing concerns"
+      ],
+      complaints: [
+        "Food served cold",
+        "Contaminated food served",
+        "Poor hygiene in kitchen",
+        "Limited vegetarian options"
+      ],
+      process: [
+        "Immediate inspection",
+        "Kitchen staff briefing",
+        "Menu improvement",
+        "Regular quality checks"
+      ]
+    },
+    {
+      id: 8,
+      name: "Library Services",
+      icon: "📖",
+      priority: "Medium",
+      urgency: 55,
+      resolveTime: "1-3 Working Days",
+      responseTime: "Within 8 Hours",
+      department: "Library Department",
+      handles: [
+        "Book availability issues",
+        "Library timings",
+        "Noise in reading area",
+        "Equipment functionality",
+        "Digital resource access"
+      ],
+      complaints: [
+        "Required books not available",
+        "Library closing early",
+        "Noise disturbance",
+        "Internet not working in library"
+      ],
+      process: [
+        "Library staff assessment",
+        "Resource procurement",
+        "Rule enforcement",
+        "Service improvement"
+      ]
+    },
+    {
+      id: 9,
+      name: "Transport",
+      icon: "🚌",
+      priority: "Medium",
+      urgency: 70,
+      resolveTime: "24-72 Hours",
+      responseTime: "Within 8 Hours",
+      department: "Transport Department",
+      handles: [
+        "Bus schedule issues",
+        "Vehicle maintenance",
+        "Driver conduct",
+        "Parking problems",
+        "Route changes"
+      ],
+      complaints: [
+        "College bus always late",
+        "Bus overcrowded",
+        "Bus broke down",
+        "Parking space not available"
+      ],
+      process: [
+        "Transport manager investigation",
+        "Driver counseling",
+        "Schedule optimization",
+        "Regular monitoring"
+      ]
+    },
+    {
+      id: 10,
+      name: "IT Support",
+      icon: "💻",
+      priority: "High",
+      urgency: 80,
+      resolveTime: "12-36 Hours",
+      responseTime: "Within 4 Hours",
+      department: "IT Department",
+      handles: [
+        "Wifi and internet issues",
+        "Computer system problems",
+        "Software installation",
+        "Online exam portals",
+        "Email and portal access"
+      ],
+      complaints: [
+        "Wifi not working in campus",
+        "Computer systems very slow",
+        "Software not installed",
+        "Online exam portal not loading"
+      ],
+      process: [
+        "IT team dispatch",
+        "Network troubleshooting",
+        "Software installation/update",
+        "System maintenance"
+      ]
+    },
+    {
+      id: 11,
+      name: "Medical",
+      icon: "🏥",
+      priority: "Urgent",
+      urgency: 90,
+      resolveTime: "Immediate to 12 Hours",
+      responseTime: "Within 30 Minutes",
+      department: "Medical Center",
+      handles: [
+        "Medical emergencies",
+        "Clinic availability",
+        "First aid supplies",
+        "Ambulance service",
+        "Mental health support"
+      ],
+      complaints: [
+        "Medical center closed",
+        "No first aid available",
+        "Ambulance not available",
+        "Doctor not present"
+      ],
+      process: [
+        "Immediate medical response",
+        "Emergency treatment",
+        "Hospital referral if needed",
+        "Follow-up care"
+      ]
+    },
+    {
+      id: 12,
+      name: "Sports",
+      icon: "⚽",
+      priority: "Low",
+      urgency: 45,
+      resolveTime: "1-2 Weeks",
+      responseTime: "Within 48 Hours",
+      department: "Sports Department",
+      handles: [
+        "Sports equipment issues",
+        "Ground maintenance",
+        "Coach availability",
+        "Tournament organization",
+        "Sports injuries"
+      ],
+      complaints: [
+        "Sports equipment broken",
+        "Swimming pool dirty",
+        "Gym equipment not working",
+        "Sports ground not maintained"
+      ],
+      process: [
+        "Physical education department review",
+        "Equipment procurement",
+        "Maintenance scheduling",
+        "Safety checks"
+      ]
+    },
+    {
+      id: 13,
+      name: "Security",
+      icon: "🚨",
+      priority: "Urgent",
+      urgency: 95,
+      resolveTime: "Immediate to 12 Hours",
+      responseTime: "Within 1 Hour",
+      department: "Security Department",
+      handles: [
+        "Campus security breaches",
+        "Theft incidents",
+        "Unauthorized entry",
+        "CCTV functionality",
+        "Emergency situations"
+      ],
+      complaints: [
+        "Security guard misbehaving",
+        "Mobile/laptop stolen",
+        "Unauthorized persons in campus",
+        "CCTV cameras not working"
+      ],
+      process: [
+        "Immediate security response",
+        "Incident documentation",
+        "Investigation",
+        "Preventive measures"
+      ]
+    },
+    {
+      id: 14,
+      name: "Discipline",
+      icon: "⚖️",
+      priority: "Medium",
+      urgency: 65,
+      resolveTime: "24-48 Hours",
+      responseTime: "Within 12 Hours",
+      department: "Disciplinary Committee",
+      handles: [
+        "Classroom disruptions",
+        "Smoking violations",
+        "Dress code violations",
+        "Cheating cases",
+        "Vandalism"
+      ],
+      complaints: [
+        "Noise in classroom during lectures",
+        "Students smoking in prohibited areas",
+        "Mobile phone misuse in exam hall",
+        "Property damage cases"
+      ],
+      process: [
+        "Disciplinary committee review",
+        "Student counseling",
+        "Warning/penalty issuance",
+        "Behavior monitoring"
+      ]
+    },
+    {
+      id: 15,
+      name: "Exam Cell",
+      icon: "📝",
+      priority: "High",
+      urgency: 85,
+      resolveTime: "24-72 Hours",
+      responseTime: "Within 6 Hours",
+      department: "Examination Cell",
+      handles: [
+        "Hall ticket issues",
+        "Exam schedule conflicts",
+        "Evaluation mistakes",
+        "Revaluation process",
+        "Supplementary exams"
+      ],
+      complaints: [
+        "Hall ticket not received",
+        "Exam date change needed",
+        "Marksheet error found",
+        "Revaluation application delay"
+      ],
+      process: [
+        "Exam cell verification",
+        "Document processing",
+        "University coordination",
+        "Student notification"
+      ]
+    }
+  ];
+
+  // Initialize categories - FIXED: Added missing container variable
+  function initializeCategories() {
+    const container = document.getElementById('categoryContainer');
+    
+    if (!container) {
+      console.error('Category container not found!');
+      return;
+    }
+    
+    console.log('Initializing categories...');
+    
+    categories.forEach(category => {
+      const card = document.createElement('div');
+      card.className = 'category-card';
+      card.setAttribute('data-id', category.id);
+      
+      // Set priority class
+      let priorityClass = '';
+      if (category.priority === 'Urgent') priorityClass = 'category-urgent';
+      else if (category.priority === 'High') priorityClass = 'category-high';
+      else if (category.priority === 'Medium') priorityClass = 'category-medium';
+      else priorityClass = 'category-low';
+      
+      card.innerHTML = `
+        <span class="category-icon">${category.icon}</span>
+        <h3>${category.name}</h3>
+        <div class="category-priority ${priorityClass}">${category.priority} Priority</div>
+        <div class="category-resolve-time">⏱️ ${category.resolveTime}</div>
+        <ul>
+          ${category.handles.slice(0, 3).map(item => `<li>${item}</li>`).join('')}
+        </ul>
+        <div style="margin-top: 1rem; color: #F0E491; font-weight: bold; text-align: center;">
+          Click for details →
+        </div>
+      `;
+      
+      card.addEventListener('click', () => openCategoryModal(category));
+      container.appendChild(card);
+    });
+    
+    console.log('Categories initialized successfully!');
+  }
+
+  // Open category modal - FIXED: Added department data
+  function openCategoryModal(category) {
+    const modal = document.getElementById('categoryModal');
+    const modalIcon = document.getElementById('modalIcon');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalPriority = document.getElementById('modalPriority');
+    const modalUrgency = document.getElementById('modalUrgency');
+    const modalResolveTime = document.getElementById('modalResolveTime');
+    const modalResponseTime = document.getElementById('modalResponseTime');
+    const modalHandles = document.getElementById('modalHandles');
+    const modalComplaints = document.getElementById('modalComplaints');
+    const modalProcess = document.getElementById('modalProcess');
+    const modalDepartment = document.getElementById('modalDepartment');
+    const modalProgressFill = document.getElementById('modalProgressFill');
+    
+    // Set modal content
+    modalIcon.textContent = category.icon;
+    modalTitle.textContent = category.name;
+    modalPriority.textContent = category.priority;
+    modalPriority.className = `category-priority ${getPriorityClass(category.priority)}`;
+    modalUrgency.textContent = `${category.urgency}/100`;
+    modalResolveTime.textContent = category.resolveTime;
+    modalResponseTime.textContent = category.responseTime;
+    
+    // Set lists
+    modalHandles.innerHTML = category.handles.map(item => `<li>${item}</li>`).join('');
+    modalComplaints.innerHTML = category.complaints.map(item => `<li>${item}</li>`).join('');
+    modalProcess.innerHTML = category.process.map(item => `<li>${item}</li>`).join('');
+    modalDepartment.textContent = category.department;
+    
+    // Set progress bar
+    modalProgressFill.style.width = `${category.urgency}%`;
+    modalProgressFill.className = `progress-fill ${getPriorityClass(category.priority)}`;
+    
+    // Show modal
+    modal.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+  }
+
+  // Get priority class
+  function getPriorityClass(priority) {
+    switch(priority) {
+      case 'Urgent': return 'priority-high';
+      case 'High': return 'priority-high';
+      case 'Medium': return 'priority-medium';
+      case 'Low': return 'priority-low';
+      default: return 'priority-medium';
+    }
+  }
+
+  // Close modal
+  function closeModal() {
+    document.getElementById('categoryModal').style.display = 'none';
+    document.body.style.overflow = 'auto';
+  }
+
+  // Close modal when clicking outside
+  window.onclick = function(event) {
+    const modal = document.getElementById('categoryModal');
+    if (event.target === modal) {
+      closeModal();
+    }
+  };
+
+  // ========== FORM SUBMISSION HANDLER ==========
+  const form = document.getElementById('complaintForm');
+  const resultDiv = document.getElementById('result');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const complaintText = document.getElementById('complaint').value.trim();
+    
+    if (!complaintText) {
+      showNotification('Please enter a complaint', 'warning');
+      return;
+    }
+
+    resultDiv.textContent = 'Processing...';
+    showNotification('Submitting complaint...', 'info');
+
+    try {
+      // Submit complaint without photo
+      const response = await fetch('http://localhost:5000/submit-complaint', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({complaint_text: complaintText})
+      });
+      
+      const data = await response.json();
+      handleResponse(data, response.ok);
+      
+    } catch (err) {
+      showNotification('Server connection failed', 'error');
+      console.error('Error:', err);
+    }
+  });
+
+  // Helper function to handle response
+  function handleResponse(data, isSuccess) {
+    if (isSuccess) {
+      resultDiv.innerHTML = `
+  <div class="complaint-card" style="border-top-color: ${data.urgency.color}">
+    <div class="urgency-badge" style="background: ${data.urgency.color}; color: white;">
+      ${data.urgency.icon} ${data.urgency.level.toUpperCase()} PRIORITY
+    </div>
+    
+    <!-- Simple ID Display -->
+    <div style="margin: 20px 0; text-align: center;">
+      <p style="color: #333; margin-bottom: 10px;"><strong>Complaint ID:</strong></p>
+      <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 10px;">
+        <code id="complaintIdDisplay" style="background: #f8f9fa; padding: 10px 15px; border-radius: 8px; font-size: 1.2rem; font-weight: bold; color: #1d035f; border: 2px solid #8BAE66;">
+          ${data.complaint_id}
+        </code>
+        <button 
+  onclick="copyComplaintId('${data.complaint_id}', this)"
+  style="background: #8BAE66; color: black; border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; display: flex; align-items: center; gap: 5px; transition: all 0.2s;"
+  onmousedown="this.style.transform='scale(0.95)'"
+  onmouseup="this.style.transform='scale(1)'"
+  onmouseleave="this.style.transform='scale(1)'"
+>
+  <span>📋</span> Copy
+</button>
+      </div>
+      
+    </div>
+    
+    <p style="color: #333;"><strong>Category:</strong> ${data.category}</p>
+    
+    <p style="color: #333;"><strong>⏰ Deadline:</strong> ${data.deadline}</p>
+    <p style="color: #333;"><strong>📋 Action:</strong> ${data.action_required}</p>
+    
+    <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; margin-top: 15px;">
+      <strong style="color: #333;">Instructions:</strong>
+      <ul style="margin: 5px 0; padding-left: 20px; color: #555;">
+        ${data.instructions.map(inst => `<li>${inst}</li>`).join('')}
+      </ul>
+    </div>
+    
+    <p style="margin-top: 15px; color: #333; font-size: 0.9em;">
+      <strong>Submitted:</strong> ${data.submitted_at}
+    </p>
+  </div>
+  
+  <!-- Status check section -->
+  <div style="margin-top: 20px; padding: 15px; background: #f0f8ff; border-radius: 8px;">
+    <h4 style="color: #1d035f;">📱 Check Status Anytime</h4>
+    <p style="color: #333;">Use your Complaint ID to track progress</p>
+    
+    <button onclick="window.location.href='/track'" style="background: #8BAE66; color: black; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-top: 10px;">
+  Go to Status Tracker
+</button>
+  </div>
+`;
+      showNotification(`Complaint submitted! ${data.urgency.icon} ${data.urgency.level} priority`, 'success');
+      
+      // Clear form
+      document.getElementById('complaint').value = '';
+      
+    } else {
+      // Error handling
+      resultDiv.innerHTML = `
+        <div style="color: #f44336; background: #fde8e8; padding: 15px; border-radius: 8px;">
+          <strong>Error:</strong> ${data.error}<br>
+          ${data.message ? `<em>${data.message}</em><br>` : ''}
+          ${data.suggestion ? `<strong>Suggestion:</strong> ${data.suggestion}` : ''}
+        </div>
+      `;
+      showNotification(`Error: ${data.error}`, 'error');
+    }
+  }
+
+  // ========== REAL-TIME URGENCY PREVIEW ==========
+ 
+// ========== REAL-TIME URGENCY PREVIEW (IMPROVED) ==========
+let urgencyDebounceTimer;
+const complaintTextarea = document.getElementById('complaint');
+
+complaintTextarea.addEventListener('input', async function() {
+    const text = this.value.trim();
+    
+    // Clear previous timer
+    clearTimeout(urgencyDebounceTimer);
+    
+    // Only analyze if text is meaningful
+    if (text.length < 10) {
+        hideUrgencyPreview();
+        return;
+    }
+    
+    // Wait for user to pause typing (500ms delay)
+    urgencyDebounceTimer = setTimeout(async () => {
+        // Don't show preview if form was just submitted
+        if (document.getElementById('result').textContent.includes('submitted')) {
+            return;
+        }
+        
+        try {
+            const response = await fetch('http://localhost:5000/analyze-urgency', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({complaint_text: text})
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                // Only show preview if urgency is medium or high
+                if (data.urgency.level !== 'low') {
+                    showUrgencyPreview(data.urgency);
+                } else {
+                    hideUrgencyPreview();
+                }
+            }
+        } catch (err) {
+            // Silently fail for preview feature
+            hideUrgencyPreview();
+        }
+    }, 500); // Wait 500ms after user stops typing
+});
+
+// Also hide preview when user focuses out
+complaintTextarea.addEventListener('blur', function() {
+    hideUrgencyPreview();
+    clearTimeout(urgencyDebounceTimer);
+});
+
+// Hide preview when submitting form
+document.getElementById('complaintForm').addEventListener('submit', function() {
+    hideUrgencyPreview();
+    clearTimeout(urgencyDebounceTimer);
+});
+
+function showUrgencyPreview(urgency) {
+    let preview = document.getElementById('urgency-preview');
+    if (!preview) {
+        preview = document.createElement('div');
+        preview.id = 'urgency-preview';
+        preview.className = 'urgency-preview';
+        document.body.appendChild(preview);
+    }
+    
+    preview.innerHTML = `
+        <strong>${urgency.icon} Auto-detected: ${urgency.level.toUpperCase()}</strong><br>
+        <small>${urgency.message}</small>
+        <div class="deadline-progress">
+            <div class="deadline-progress-bar" style="width: ${Math.min(urgency.score * 10, 100)}%; background: ${urgency.color}"></div>
+        </div>
+        <button onclick="hideUrgencyPreview()" style="position: absolute; top: 5px; right: 5px; background: none; border: none; color: white; cursor: pointer; font-size: 14px;">✕</button>
+    `;
+    
+    preview.style.background = urgency.color;
+    preview.style.display = 'block';
+    
+    // Auto-hide after shorter time (3 seconds instead of 5)
+    clearTimeout(window.urgencyPreviewTimeout);
+    window.urgencyPreviewTimeout = setTimeout(() => {
+        preview.style.display = 'none';
+    }, 3000);
+}
+
+function hideUrgencyPreview() {
+    const preview = document.getElementById('urgency-preview');
+    if (preview) {
+        preview.style.display = 'none';
+    }
+    clearTimeout(window.urgencyPreviewTimeout);
+}
+
+// Add this CSS for better preview styling
+const style = document.createElement('style');
+style.textContent = `
+    #urgency-preview {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        padding: 15px;
+        border-radius: 10px;
+        color: white;
+        display: none;
+        z-index: 1000;
+        max-width: 300px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        border-left: 5px solid;
+        animation: slideInRight 0.3s ease;
+        backdrop-filter: blur(10px);
+    }
+    
+    @keyframes slideInRight {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    
+    #urgency-preview button {
+        opacity: 0.7;
+        transition: opacity 0.2s;
+    }
+    
+    #urgency-preview button:hover {
+        opacity: 1;
+    }
+`;
+document.head.appendChild(style);
+   
+  // ========== ENTER KEY HANDLER ==========
+  document.getElementById('complaint').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      form.dispatchEvent(new Event('submit'));
+    }
+  });
+
+  // ========== SMOOTH SCROLLING ==========
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+
+  // Simple copy function with visual feedback
+  function copyComplaintId(complaintId, button) {
+    // Store original state
+    const originalHTML = button.innerHTML;
+    const originalBg = button.style.background;
+    const originalColor = button.style.color;
+    
+    // Visual feedback - button press effect
+    button.style.transform = 'scale(0.95)';
+    
+    // Change button appearance
+    button.innerHTML = '<span>✅</span> Copied!';
+    button.style.background = '#28a745';
+    button.style.color = 'white';
+    button.disabled = true;
+    
+    // Copy to clipboard
+    navigator.clipboard.writeText(complaintId).then(() => {
+      showNotification('Complaint ID copied!', 'success');
+    }).catch(() => {
+      // Fallback
+      const textArea = document.createElement('textarea');
+      textArea.value = complaintId;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      showNotification('ID copied to clipboard!', 'success');
+    });
+    
+    // Reset button after 1.5 seconds
+    setTimeout(() => {
+      button.innerHTML = originalHTML;
+      button.style.background = originalBg;
+      button.style.color = originalColor;
+      button.disabled = false;
+      button.style.transform = 'scale(1)';
+    }, 1500);
+  }
+
+  // ========== ENTER KEY HANDLER FOR STATUS INPUT ==========
+  document.getElementById('statusComplaintId')?.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      checkStatusAdvanced();
+    }
+  });
+
+  // Initialize categories on load
+  document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded, initializing categories...');
+    initializeCategories();
+  });
+</script>
+</body>
+</html>

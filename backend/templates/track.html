@@ -1,0 +1,600 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Track Complaint - Smart Complaint Tracker</title>
+<style>
+  /* ===== GLOBAL STYLES ===== */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    background-color: #1d035f;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #EBD5AB;
+    line-height: 1.6;
+    padding: 20px;
+  }
+
+  .container {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  /* Header */
+  header {
+    background: rgba(29, 3, 95, 0.95);
+    backdrop-filter: blur(10px);
+    width: 100%;
+    z-index: 1000;
+    border-bottom: 2px solid #8BAE66;
+    border-radius: 10px;
+    margin-bottom: 30px;
+  }
+
+  .nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+  }
+
+  .logo {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #F0E491;
+  }
+
+  .logo span {
+    color: #8BAE66;
+  }
+
+  .nav-links {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+  }
+
+  .nav-links a {
+    color: #EBD5AB;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+  }
+
+  .nav-links a:hover {
+    color: #8BAE66;
+  }
+
+  /* Back to Home button */
+  .back-home {
+    display: inline-block;
+    background: #8BAE66;
+    color: #000;
+    padding: 10px 20px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: bold;
+    margin-bottom: 20px;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+
+  .back-home:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(139, 174, 102, 0.4);
+  }
+
+  /* ===== STATUS TRACKING SECTION ===== */
+  .track-status {
+    padding: 40px 0;
+    background: #1d035f;
+    position: relative;
+  }
+
+  .section-title {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    color: #F0E491;
+  }
+
+  .status-container {
+    background: linear-gradient(145deg, #2d0a7a, #1d035f);
+    border-radius: 20px;
+    padding: 2.5rem;
+    border: 3px solid #8BAE66;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+  }
+
+  .status-input-section {
+    background: rgba(29, 3, 95, 0.7);
+    padding: 2rem;
+    border-radius: 15px;
+    margin-bottom: 2rem;
+    border: 2px solid #8BAE66;
+  }
+
+  .status-display-section {
+    min-height: 400px;
+    background: rgba(45, 10, 122, 0.8);
+    border-radius: 15px;
+    padding: 2rem;
+    border: 2px solid #8BAE66;
+    transition: all 0.3s ease;
+  }
+
+  /* Status Timeline */
+  .status-timeline {
+    position: relative;
+    padding: 20px 0;
+  }
+
+  .status-timeline::before {
+    content: '';
+    position: absolute;
+    left: 30px;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: #8BAE66;
+  }
+
+  .timeline-item {
+    position: relative;
+    padding-left: 60px;
+    margin-bottom: 30px;
+  }
+
+  .timeline-icon {
+    position: absolute;
+    left: 15px;
+    top: 0;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    z-index: 2;
+  }
+
+  .timeline-content {
+    background: rgba(139, 174, 102, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+    border-left: 4px solid;
+  }
+
+  /* Status Colors */
+  .status-submitted { border-color: #3498db; }
+  .status-under_review { border-color: #f39c12; }
+  .status-in_progress { border-color: #9b59b6; }
+  .status-resolved { border-color: #2ecc71; }
+
+  .status-badge {
+    display: inline-block;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    margin: 5px;
+  }
+
+  /* Progress Bar */
+  .status-progress {
+    height: 10px;
+    background: #3a1a7a;
+    border-radius: 5px;
+    margin: 20px 0;
+    overflow: hidden;
+  }
+
+  .status-progress-bar {
+    height: 100%;
+    border-radius: 5px;
+    transition: width 1s ease;
+  }
+
+  /* Countdown Timer */
+  .deadline-countdown {
+    background: linear-gradient(135deg, #ff4757, #ff6b81);
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    margin: 20px 0;
+    font-weight: bold;
+    font-size: 1.2rem;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.8; }
+    100% { opacity: 1; }
+  }
+
+  /* Notification Styles */
+  .notification {
+    position: fixed;
+    top: 90px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 8px;
+    color: white;
+    z-index: 1000;
+    max-width: 300px;
+    display: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    animation: slideInRight 0.3s ease;
+  }
+
+  .notification.success {
+    background-color: #4CAF50;
+    border-left: 4px solid #2E7D32;
+  }
+
+  .notification.error {
+    background-color: #f44336;
+    border-left: 4px solid #c62828;
+  }
+
+  .notification.warning {
+    background-color: #ff9800;
+    border-left: 4px solid #ef6c00;
+  }
+
+  .notification.info {
+    background-color: #2196F3;
+    border-left: 4px solid #1565c0;
+  }
+
+  .notification-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    float: right;
+    margin-left: 15px;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+  }
+
+  @keyframes slideInRight {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .nav-links {
+      display: none;
+    }
+
+    .section-title {
+      font-size: 2rem;
+    }
+
+    .status-container {
+      padding: 1.5rem;
+    }
+
+    .notification {
+      left: 10px;
+      right: 10px;
+      max-width: none;
+    }
+  }
+</style>
+</head>
+<body>
+<!-- Notification Box -->
+<div id="notification" class="notification">
+  <span id="notification-message"></span>
+  <button class="notification-close" onclick="hideNotification()">×</button>
+</div>
+
+<!-- Header -->
+<header>
+  <div class="nav-container">
+    <div class="logo">Smart<span>Complaint</span></div>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/#how-it-works">How It Works</a></li>
+      <li><a href="/#categories">Categories</a></li>
+      <li><a href="/#submit-complaint">Submit Complaint</a></li>
+    </ul>
+  </div>
+</header>
+
+<div class="container">
+  <a href="/" class="back-home">← Back to Home</a>
+  
+  <div class="track-status">
+    <h2 class="section-title">Track Your Complaint</h2>
+    <p style="text-align: center; margin-bottom: 2rem; color: #caffae; max-width: 800px; margin-left: auto; margin-right: auto;">
+      Enter your Complaint ID to check the current status, view updates from admin, and track resolution progress.
+    </p>
+    
+    <div class="status-container">
+      <div class="status-input-section">
+        <h3 style="color: #F0E491; text-align: center; margin-bottom: 1.5rem;">🔍 Check Complaint Status</h3>
+        
+        <div class="status-form">
+          <input 
+            type="text" 
+            id="statusComplaintId" 
+            placeholder="Enter your Complaint ID (e.g., 8A3B5C7D)"
+            style="width: 100%; padding: 15px; border-radius: 10px; border: 2px solid #8BAE66; background: #2d0a7a; color: #EBD5AB; font-size: 1.1rem; margin-bottom: 15px;"
+          >
+          <button 
+            onclick="checkStatusAdvanced()"
+            style="background: #8BAE66; color: black; border: none; padding: 15px 30px; border-radius: 10px; font-size: 1.1rem; font-weight: bold; cursor: pointer; width: 100%; transition: all 0.3s;"
+            onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 5px 15px rgba(139, 174, 102, 0.4)'"
+            onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'"
+          >
+            🔎 Track Complaint
+          </button>
+        </div>
+        
+        <div style="margin-top: 20px; padding: 15px; background: rgba(139, 174, 102, 0.1); border-radius: 10px; border-left: 4px solid #8BAE66;">
+          <p style="color: #caffae; margin: 0;">
+            <strong>💡 Tip:</strong> Your Complaint ID was shown when you submitted your complaint. 
+            It looks something like: <code style="background: rgba(0,0,0,0.3); padding: 2px 8px; border-radius: 4px;">8A3B5C7D</code>
+          </p>
+        </div>
+      </div>
+      
+      <div class="status-display-section" id="statusDisplay">
+        <!-- Status will be displayed here -->
+        <div style="text-align: center; padding: 40px 20px; color: #EBD5AB;">
+          <div style="font-size: 4rem; margin-bottom: 20px;">📋</div>
+          <h3 style="color: #F0E491; margin-bottom: 10px;">No Complaint Selected</h3>
+          <p style="color: #caffae;">Enter your Complaint ID above to view detailed status, admin updates, and progress timeline.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Basic notification function
+  function showNotification(message, type) {
+    const notification = document.getElementById('notification');
+    const messageElement = document.getElementById('notification-message');
+    
+    messageElement.textContent = message;
+    notification.className = 'notification ' + (type || 'info');
+    notification.style.display = 'block';
+    
+    setTimeout(() => {
+      notification.style.display = 'none';
+    }, 5000);
+  }
+
+  // Hide notification
+  function hideNotification() {
+    document.getElementById('notification').style.display = 'none';
+  }
+
+  // ========== ENHANCED STATUS CHECKING FUNCTION ==========
+  async function checkStatusAdvanced() {
+    const complaintId = document.getElementById('statusComplaintId').value.trim().toUpperCase();
+    
+    if (!complaintId) {
+      showNotification('Please enter a Complaint ID', 'warning');
+      return;
+    }
+    
+    const statusDisplay = document.getElementById('statusDisplay');
+    statusDisplay.innerHTML = `
+      <div style="text-align: center; padding: 40px 20px;">
+        <div class="spinner" style="width: 50px; height: 50px; border: 5px solid rgba(139, 174, 102, 0.3); border-radius: 50%; border-top-color: #8BAE66; animation: spin 1s linear infinite; margin: 0 auto 20px;"></div>
+        <h3 style="color: #F0E491;">Fetching Status...</h3>
+        <p style="color: #caffae;">Retrieving complaint details and updates</p>
+      </div>
+    `;
+    
+    try {
+      const response = await fetch(`http://localhost:5000/check-status/${encodeURIComponent(complaintId)}`);
+      const data = await response.json();
+      
+      if (response.ok) {
+        displayStatusDashboard(data);
+        showNotification(`✅ Status loaded for ${complaintId}`, 'success');
+      } else {
+        statusDisplay.innerHTML = `
+          <div style="text-align: center; padding: 40px 20px; color: #EBD5AB;">
+            <div style="font-size: 4rem; margin-bottom: 20px;">❌</div>
+            <h3 style="color: #f44336; margin-bottom: 10px;">Complaint Not Found</h3>
+            <p style="color: #caffae; margin-bottom: 20px;">No complaint found with ID: <strong>${complaintId}</strong></p>
+            <p style="color: #EBD5AB; font-size: 0.9rem;">Please check your Complaint ID and try again.</p>
+          </div>
+        `;
+        showNotification(data.error || 'Complaint not found', 'error');
+      }
+    } catch (error) {
+      statusDisplay.innerHTML = `
+        <div style="text-align: center; padding: 40px 20px; color: #EBD5AB;">
+          <div style="font-size: 4rem; margin-bottom: 20px;">⚠️</div>
+          <h3 style="color: #ff9800; margin-bottom: 10px;">Connection Error</h3>
+          <p style="color: #caffae;">Unable to connect to the server. Please try again later.</p>
+        </div>
+      `;
+      showNotification('Failed to connect to server', 'error');
+    }
+  }
+
+  // ========== DISPLAY STATUS DASHBOARD ==========
+  function displayStatusDashboard(data) {
+    const statusDisplay = document.getElementById('statusDisplay');
+    
+    // Get status color and icon
+    const statusConfig = {
+      'submitted': { color: '#3498db', icon: '📤', label: 'Submitted' },
+      'under_review': { color: '#f39c12', icon: '🔍', label: 'Under Review' },
+      'in_progress': { color: '#9b59b6', icon: '⚙️', label: 'In Progress' },
+      'resolved': { color: '#2ecc71', icon: '✅', label: 'Resolved' }
+    };
+    
+    const currentStatus = statusConfig[data.current_status] || { color: '#95a5a6', icon: '❓', label: 'Unknown' };
+    
+    // Calculate progress percentage based on status
+    const progressMap = {
+      'submitted': 25,
+      'under_review': 50,
+      'in_progress': 75,
+      'resolved': 100
+    };
+    const progressPercent = progressMap[data.current_status] || 0;
+    
+    const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleString('en-IN', {  // 'en-IN' for Indian format
+        timeZone: 'Asia/Kolkata',
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+};
+    // Get time remaining
+    const getTimeRemaining = (deadline) => {
+      const now = new Date();
+      const deadlineDate = new Date(deadline);
+      const diffMs = deadlineDate - now;
+      
+      if (diffMs <= 0) return 'Deadline passed';
+      
+      const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+      const diffHours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      
+      if (diffDays > 0) return `${diffDays}d ${diffHours}h remaining`;
+      if (diffHours > 0) return `${diffHours}h remaining`;
+      return 'Less than 1 hour remaining';
+    };
+    
+    // Build HTML
+    statusDisplay.innerHTML = `
+      <div class="status-dashboard">
+        <!-- Header -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #8BAE66;">
+          <div>
+            <h2 style="color: #F0E491; margin: 0;">Complaint #${data.complaint_id}</h2>
+            <p style="color: #caffae; margin: 5px 0 0 0;">Submitted: ${formatDate(data.submitted_at)}</p>
+          </div>
+          <div class="status-badge" style="background: ${currentStatus.color}; color: white; font-size: 1.1rem;">
+            ${currentStatus.icon} ${currentStatus.label}
+          </div>
+        </div>
+        
+        <!-- Complaint Summary -->
+        <div style="background: rgba(139, 174, 102, 0.1); padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+          <h4 style="color: #F0E491; margin-bottom: 10px;">📝 Complaint Details</h4>
+          <p style="color: #caffae; margin: 5px 0;"><strong>Category:</strong> ${data.category}</p>
+          <p style="color: #caffae; margin: 5px 0;"><strong>Urgency Level:</strong> ${data.urgency}</p>
+          <p style="color: #caffae; margin: 5px 0;"><strong>Assigned To:</strong> ${data.assigned_to}</p>
+        </div>
+        
+        <!-- Progress Bar -->
+        <div style="margin: 30px 0;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+            <span style="color: #F0E491;">Progress</span>
+            <span style="color: #caffae; font-weight: bold;">${progressPercent}%</span>
+          </div>
+          <div class="status-progress">
+            <div class="status-progress-bar" style="width: ${progressPercent}%; background: ${currentStatus.color};"></div>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-top: 5px; font-size: 0.8rem; color: #EBD5AB;">
+            <span>Submitted</span>
+            <span>Under Review</span>
+            <span>In Progress</span>
+            <span>Resolved</span>
+          </div>
+        </div>
+        
+        <!-- Timeline -->
+        <h4 style="color: #F0E491; margin: 30px 0 15px 0;">📋 Status Timeline</h4>
+        <div class="status-timeline">
+          ${data.status_history.map((update, index) => `
+            <div class="timeline-item">
+              <div class="timeline-icon" style="background: ${statusConfig[update.status]?.color || '#95a5a6'}; color: white;">
+                ${statusConfig[update.status]?.icon || '❓'}
+              </div>
+              <div class="timeline-content status-${update.status}">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                  <strong style="color: #F0E491;">${statusConfig[update.status]?.label || update.status}</strong>
+                  <span style="color: #caffae; font-size: 0.9rem;">${formatDate(update.timestamp)}</span>
+                </div>
+                <p style="color: #EBD5AB; margin: 5px 0;"><strong>Updated by:</strong> ${update.updated_by}</p>
+                ${update.notes ? `<p style="color: #caffae; margin: 5px 0; font-style: italic;">"${update.notes}"</p>` : ''}
+              </div>
+            </div>
+          `).join('')}
+        </div>
+        
+        <!-- Deadline Info -->
+        <div class="deadline-countdown">
+          <div style="font-size: 1.5rem; margin-bottom: 5px;">⏰ ${getTimeRemaining(data.deadline)}</div>
+          <div style="font-size: 0.9rem;">Deadline: ${formatDate(data.deadline)}</div>
+        </div>
+        
+        <!-- Share/Download -->
+        <div style="display: flex; gap: 10px; margin-top: 30px;">
+          <button onclick="saveStatusAsImage()" style="flex: 1; background: #8BAE66; color: black; border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold;">
+            💾 Save Status
+          </button>
+          <button onclick="refreshStatus('${data.complaint_id}')" style="flex: 1; background: #2d0a7a; color: #EBD5AB; border: 1px solid #8BAE66; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold;">
+            🔄 Refresh
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  // Helper functions
+  function saveStatusAsImage() {
+    showNotification('Feature coming soon! Status will be saved as image.', 'info');
+  }
+
+  function refreshStatus(complaintId) {
+    document.getElementById('statusComplaintId').value = complaintId;
+    checkStatusAdvanced();
+  }
+
+  // Enter key handler for status input
+  document.getElementById('statusComplaintId').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      checkStatusAdvanced();
+    }
+  });
+
+  // Add CSS for spinner animation
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  `;
+  document.head.appendChild(style);
+</script>
+</body>
+</html>

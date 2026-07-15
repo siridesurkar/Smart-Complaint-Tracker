@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Panel - Complaint Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .header {
+            background: #1d035f;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .complaint-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-left: 4px solid;
+        }
+        
+        .status-badge {
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+            color: white;
+            display: inline-block;
+        }
+        
+        .submitted { border-color: #3498db; }
+        .under_review { border-color: #f39c12; }
+        .in_progress { border-color: #9b59b6; }
+        .resolved { border-color: #2ecc71; }
+        
+        .update-form {
+            background: #e8f4f8;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+        }
+        
+        select, textarea, input {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        button {
+            background: #1d035f;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        
+        button:hover {
+            background: #2d0a7a;
+        }
+        
+        .filters {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        /* Complaint Text Styling */
+        .complaint-text-container {
+            margin-bottom: 15px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .complaint-text {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            line-height: 1.5;
+            margin: 0;
+            font-size: 14px;
+        }
+        
+        .read-more-btn {
+            background: #6c757d;
+            font-size: 0.75em;
+            padding: 2px 8px;
+            margin-top: 8px;
+            border-radius: 3px;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+        
+        /* Table-like layout for complaint info */
+        .complaint-info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background: white;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .complaint-info-table tr {
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .complaint-info-table tr:last-child {
+            border-bottom: none;
+        }
+        
+        .complaint-info-table td {
+            padding: 10px 15px;
+            vertical-align: middle;
+        }
+        
+        /* FIX: All labels now have the same style */
+        .complaint-info-table td:nth-child(odd) {
+            font-weight: bold;
+            color: #495057;
+            width: 140px;
+            background: #f8f9fa;
+        }
+        
+        .complaint-info-table td:nth-child(even) {
+            color: #212529;
+        }
+        
+        .photo-container {
+            margin: 15px 0;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .photo-label {
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 8px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📋 Admin Complaint Dashboard</h1>
+        <p>Update complaint status and track progress</p>
+    </div>
+    
+    <div class="filters">
+        <button onclick="loadComplaints('all')">All Complaints</button>
+        <button onclick="loadComplaints('submitted')">Submitted</button>
+        <button onclick="loadComplaints('under_review')">Under Review</button>
+        <button onclick="loadComplaints('in_progress')">In Progress</button>
+        <button onclick="loadComplaints('resolved')">Resolved</button>
+    </div>
+    
+    <div id="complaints-container">
+        <!-- Complaints will load here -->
+    </div>
+    
+    <script>
+        // Load all complaints on page load
+        document.addEventListener('DOMContentLoaded', loadComplaints);
+        
+        async function loadComplaints(filter = 'all') {
+            try {
+                const response = await fetch('http://localhost:5000/get-all-complaints');
+                const complaints = await response.json();
+                
+                const container = document.getElementById('complaints-container');
+                container.innerHTML = '';
+                
+                // Filter complaints if needed
+                let filtered = complaints;
+                if (filter !== 'all') {
+                    filtered = complaints.filter(c => c.status === filter);
+                }
+                
+                if (filtered.length === 0) {
+                    container.innerHTML = '<p style="text-align: center; padding: 20px; color: #666;">No complaints found.</p>';
+                    return;
+                }
+                
+                filtered.forEach(complaint => {
+                    const card = document.createElement('div');
+                    card.className = `complaint-card ${complaint.status}`;
+                    
+                    // Clean and prepare complaint text
+                    const complaintText = complaint.complaint_text || '';
+                    const showReadMore = complaintText.length > 200;
+                    const displayText = showReadMore ? complaintText.substring(0, 200) + '...' : complaintText;
+                    
+                    card.innerHTML = `
+                        <div class="complaint-text-container">
+                            <p class="complaint-text" id="text-${complaint.id}">${displayText}</p>
+                            ${showReadMore ? `
+                                <button class="read-more-btn" onclick="toggleText('${complaint.id}')" 
+                                        data-fulltext="${complaintText.replace(/"/g, '&quot;')}">
+                                    Read More
+                                </button>
+                            ` : ''}
+                        </div>
+                        
+                        <!-- Table Layout -->
+                        <table class="complaint-info-table">
+                            <tr>
+                                <td>ID:</td>
+                                <td>${complaint.id}</td>
+                                <td>Category:</td>
+                                <td>${complaint.category}</td>
+                            </tr>
+                            <tr>
+                                <td>Urgency:</td>
+                                <td>${complaint.urgency_level}</td>
+                                <td>Status:</td>
+                                <td>
+                                    <span class="status-badge" style="background: ${getStatusColor(complaint.status)}">
+                                        ${complaint.status.replace('_', ' ').toUpperCase()}
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Submitted:</td>
+                                <td>${complaint.submitted_at}</td>
+                                <td>Assigned to:</td>
+                                <td>${complaint.assigned_to || 'Not assigned'}</td>
+                            </tr>
+                        </table>
+                        
+                        ${complaint.photo_path ? `
+                        <div class="photo-container">
+                            <span class="photo-label">Photo Evidence:</span>
+                            <img src="http://localhost:5000/complaint-photo/${complaint.photo_path}" 
+                                 style="max-width: 200px; max-height: 150px; border-radius: 5px; margin-top: 5px; border: 1px solid #ddd;">
+                        </div>
+                        ` : ''}
+
+                        <button onclick="showUpdateForm('${complaint.id}')">Update Status</button>
+                        
+                        <div id="form-${complaint.id}" class="update-form">
+                            <h4>Update Status for ${complaint.id}</h4>
+                            <select id="status-${complaint.id}">
+                                <option value="submitted" ${complaint.status === 'submitted' ? 'selected' : ''}>Submitted</option>
+                                <option value="under_review" ${complaint.status === 'under_review' ? 'selected' : ''}>Under Review</option>
+                                <option value="in_progress" ${complaint.status === 'in_progress' ? 'selected' : ''}>In Progress</option>
+                                <option value="resolved" ${complaint.status === 'resolved' ? 'selected' : ''}>Resolved</option>
+                            </select>
+                            <input type="text" id="admin-${complaint.id}" placeholder="Your name" value="${complaint.assigned_to || ''}">
+                            <textarea id="notes-${complaint.id}" placeholder="Update notes..." rows="3">${complaint.admin_notes || ''}</textarea>
+                            <button onclick="updateStatus('${complaint.id}')">Save Update</button>
+                            <button onclick="hideUpdateForm('${complaint.id}')">Cancel</button>
+                        </div>
+                    `;
+                    
+                    container.appendChild(card);
+                });
+                
+            } catch (error) {
+                console.error('Error loading complaints:', error);
+                container.innerHTML = `
+                    <div style="background: #ffe6e6; padding: 15px; border-radius: 8px; border: 1px solid #ff9999;">
+                        <p style="color: #cc0000; margin: 0;">Error loading complaints. Please check your connection and try again.</p>
+                    </div>
+                `;
+            }
+        }
+        
+        function getStatusColor(status) {
+            const colors = {
+                'submitted': '#3498db',
+                'under_review': '#f39c12',
+                'in_progress': '#9b59b6',
+                'resolved': '#2ecc71'
+            };
+            return colors[status] || '#95a5a6';
+        }
+        
+        function showUpdateForm(complaintId) {
+            document.getElementById(`form-${complaintId}`).style.display = 'block';
+        }
+        
+        function hideUpdateForm(complaintId) {
+            document.getElementById(`form-${complaintId}`).style.display = 'none';
+        }
+        
+        // FIXED: Read More button function
+        function toggleText(complaintId) {
+            const textElement = document.getElementById(`text-${complaintId}`);
+            const button = textElement.nextElementSibling;
+            
+            if (!button || button.tagName !== 'BUTTON') return;
+            
+            const fullText = button.getAttribute('data-fulltext');
+            
+            if (button.textContent === 'Read More') {
+                // Show full text
+                const decodedText = fullText.replace(/&quot;/g, '"');
+                textElement.textContent = decodedText;
+                button.textContent = 'Show Less';
+            } else {
+                // Show shortened text
+                const decodedFullText = fullText.replace(/&quot;/g, '"');
+                const shortText = decodedFullText.length > 200 ? 
+                    decodedFullText.substring(0, 200) + '...' : 
+                    decodedFullText;
+                textElement.textContent = shortText;
+                button.textContent = 'Read More';
+            }
+        }
+        
+        async function updateStatus(complaintId) {
+            const status = document.getElementById(`status-${complaintId}`).value;
+            const adminName = document.getElementById(`admin-${complaintId}`).value;
+            const notes = document.getElementById(`notes-${complaintId}`).value;
+            
+            if (!adminName) {
+                alert('Please enter your name');
+                return;
+            }
+            
+            try {
+                const response = await fetch('http://localhost:5000/update-status', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        complaint_id: complaintId,
+                        status: status,
+                        admin_name: adminName,
+                        notes: notes
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    alert(`✅ Status updated to: ${status}`);
+                    hideUpdateForm(complaintId);
+                    loadComplaints(); // Refresh list
+                } else {
+                    alert(`Error: ${result.error}`);
+                }
+            } catch (error) {
+                alert('Failed to update status');
+                console.error(error);
+            }
+        }
+    </script>
+</body>
+</html>
